@@ -1,12 +1,12 @@
+import { isInitialInputLine, World } from './index';
+
 import {
-    isInitialInputLine,
     Orientation,
     Robot,
     moveForward,
-    World,
     Rotation,
     rotateRobot,
-} from './index';
+} from './robot';
 
 describe('Line Parsing', () => {
     test('initial line detected as true when takes the form digit*SPACE*digit', () => {
