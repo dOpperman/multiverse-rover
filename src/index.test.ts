@@ -1,19 +1,25 @@
-import { isInitialLine, Orientation, Robot, moveForward, World } from './index';
+import {
+    isInitialInputLine,
+    Orientation,
+    Robot,
+    moveForward,
+    World,
+} from './index';
 
 describe('Line Parsing', () => {
     test('initial line detected as true when takes the form digit*SPACE*digit', () => {
         const input = '4 8';
-        expect(isInitialLine(input)).toEqual(true);
+        expect(isInitialInputLine(input)).toEqual(true);
     });
 
     test('initial line detected when input grid is multiple digits in size', () => {
         const input = '44 85';
-        expect(isInitialLine(input)).toEqual(true);
+        expect(isInitialInputLine(input)).toEqual(true);
     });
 
     test('false returned when input contains non-numbers', () => {
         const input = 'a l';
-        expect(isInitialLine(input)).toEqual(false);
+        expect(isInitialInputLine(input)).toEqual(false);
     });
 });
 
@@ -25,6 +31,7 @@ describe('Robot Moving', () => {
             orientation: Orientation.N,
         };
         const world: World = { x: 5, y: 5 };
+        const state = { world, robots: [robot] };
 
         const expectedResult = {
             position: { x: 1, y: 2 },
@@ -32,6 +39,6 @@ describe('Robot Moving', () => {
             orientation: Orientation.N,
         };
 
-        expect(moveForward(robot, world)).toEqual(expectedResult);
+        expect(moveForward(robot, state)).toEqual(expectedResult);
     });
 });

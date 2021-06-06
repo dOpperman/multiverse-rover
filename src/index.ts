@@ -26,7 +26,7 @@ export type State = {
     robots: Array<Robot>;
 };
 
-export const moveForward = (
+const findForwardDestination = (
     { position, isLost, orientation }: Robot,
     { x: xLimit, y: yLimit }: World,
 ): Robot => {
@@ -95,7 +95,22 @@ export const moveForward = (
     }
 };
 
-export const isInitialLine = (line: string): boolean => {
+export const moveForward = (
+    robot: Robot,
+    { world, robots }: State,
+): Robot | undefined => {
+    const robotAfterMove = findForwardDestination(robot, world);
+
+    return robots.some(
+        ({ position }) =>
+            position.x == robotAfterMove.position.x &&
+            position.y == robotAfterMove.position.y,
+    )
+        ? undefined
+        : robotAfterMove;
+};
+
+export const isInitialInputLine = (line: string): boolean => {
     const values = line.split(' ');
 
     const filteredValues = values.filter(
@@ -111,10 +126,16 @@ export const parseLine = (line: string) => {
 
 export const parseInput = (input: string): State => {
     return {
-        world: { x: 0, y: 0 },
+        world: {
+            x: 0,
+            y: 0,
+        },
         robots: [
             {
-                position: { x: 0, y: 0 },
+                position: {
+                    x: 0,
+                    y: 0,
+                },
                 orientation: Orientation.N,
                 isLost: false,
             },
