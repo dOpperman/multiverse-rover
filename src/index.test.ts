@@ -4,6 +4,8 @@ import {
     Robot,
     moveForward,
     World,
+    Rotation,
+    rotateRobot,
 } from './index';
 
 describe('Line Parsing', () => {
@@ -40,5 +42,16 @@ describe('Robot Moving', () => {
         };
 
         expect(moveForward(robot, state)).toEqual(expectedResult);
+    });
+
+    test('can rotate to produce correct orientation', () => {
+        const robot: Robot = {
+            position: { x: 1, y: 1 },
+            isLost: false,
+            orientation: Orientation.N,
+        };
+        const instruction = Rotation.RIGHT;
+
+        expect(rotateRobot(robot, instruction)).toEqual(Orientation.E);
     });
 });

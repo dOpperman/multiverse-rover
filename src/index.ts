@@ -21,6 +21,11 @@ export enum Orientation {
     W = 'W',
 }
 
+export enum Rotation {
+    LEFT = 'L',
+    RIGHT = 'R',
+}
+
 export type State = {
     world: World;
     robots: Array<Robot>;
@@ -92,6 +97,22 @@ const findForwardDestination = (
                       orientation,
                       isLost: false,
                   };
+    }
+};
+
+export const rotateRobot = (
+    { orientation }: Robot,
+    rotation: Rotation,
+): Orientation => {
+    switch (orientation) {
+        case Orientation.N:
+            return rotation == Rotation.LEFT ? Orientation.W : Orientation.E;
+        case Orientation.E:
+            return rotation == Rotation.LEFT ? Orientation.N : Orientation.S;
+        case Orientation.S:
+            return rotation == Rotation.LEFT ? Orientation.E : Orientation.W;
+        case Orientation.W:
+            return rotation == Rotation.LEFT ? Orientation.S : Orientation.N;
     }
 };
 
