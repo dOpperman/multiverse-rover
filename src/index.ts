@@ -1,3 +1,100 @@
+export type World = {
+    x: number;
+    y: number;
+};
+
+export type Position = {
+    x: number;
+    y: number;
+};
+
+export type Robot = {
+    position: Position;
+    orientation: Orientation;
+    isLost: boolean;
+};
+
+export enum Orientation {
+    N = 'N',
+    E = 'E',
+    S = 'S',
+    W = 'W',
+}
+
+export type State = {
+    world: World;
+    robots: Array<Robot>;
+};
+
+export const moveForward = (
+    { position, isLost, orientation }: Robot,
+    { x: xLimit, y: yLimit }: World,
+): Robot => {
+    const { x, y } = position;
+    switch (orientation) {
+        case Orientation.N:
+            return isLost || y + 1 > yLimit
+                ? {
+                      position,
+                      orientation,
+                      isLost: true,
+                  }
+                : {
+                      position: {
+                          x,
+                          y: y + 1,
+                      },
+                      orientation,
+                      isLost: false,
+                  };
+        case Orientation.E:
+            return isLost || x + 1 > xLimit
+                ? {
+                      position,
+                      orientation,
+                      isLost: true,
+                  }
+                : {
+                      position: {
+                          x: x + 1,
+                          y,
+                      },
+                      orientation,
+                      isLost: false,
+                  };
+        case Orientation.S:
+            return isLost || y - 1 < 0
+                ? {
+                      position,
+                      orientation,
+                      isLost: true,
+                  }
+                : {
+                      position: {
+                          x,
+                          y: y - 1,
+                      },
+                      orientation,
+                      isLost: false,
+                  };
+        case Orientation.W:
+            return isLost || x - 1 < 0
+                ? {
+                      position,
+                      orientation,
+                      isLost: true,
+                  }
+                : {
+                      position: {
+                          x: x - 1,
+                          y,
+                      },
+                      orientation,
+                      isLost: false,
+                  };
+    }
+};
+
 export const isInitialLine = (line: string): boolean => {
     const values = line.split(' ');
 
@@ -10,4 +107,17 @@ export const isInitialLine = (line: string): boolean => {
 
 export const parseLine = (line: string) => {
     return line.length;
+};
+
+export const parseInput = (input: string): State => {
+    return {
+        world: { x: 0, y: 0 },
+        robots: [
+            {
+                position: { x: 0, y: 0 },
+                orientation: Orientation.N,
+                isLost: false,
+            },
+        ],
+    };
 };
