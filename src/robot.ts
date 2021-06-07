@@ -4,6 +4,7 @@ export type Robot = {
     position: Position;
     orientation: Orientation;
     isLost: boolean;
+    instructions: Array<Instruction>;
 };
 
 export type Position = {
@@ -11,9 +12,11 @@ export type Position = {
     y: number;
 };
 
-export enum Rotation {
+export enum Instruction {
     LEFT = 'L',
     RIGHT = 'R',
+    FORWARD = 'F',
+    LOST = 'LOST',
 }
 
 export enum Orientation {
@@ -25,25 +28,30 @@ export enum Orientation {
 
 export const rotateRobot = (
     { orientation }: Robot,
-    rotation: Rotation,
+    rotation: Instruction,
 ): Orientation => {
+    if (rotation == Instruction.FORWARD) {
+        throw new Error('Not rotation instruction!');
+    }
+
     switch (orientation) {
         case Orientation.N:
-            return rotation == Rotation.LEFT ? Orientation.W : Orientation.E;
+            return rotation == Instruction.LEFT ? Orientation.W : Orientation.E;
         case Orientation.E:
-            return rotation == Rotation.LEFT ? Orientation.N : Orientation.S;
+            return rotation == Instruction.LEFT ? Orientation.N : Orientation.S;
         case Orientation.S:
-            return rotation == Rotation.LEFT ? Orientation.E : Orientation.W;
+            return rotation == Instruction.LEFT ? Orientation.E : Orientation.W;
         case Orientation.W:
-            return rotation == Rotation.LEFT ? Orientation.S : Orientation.N;
+            return rotation == Instruction.LEFT ? Orientation.S : Orientation.N;
     }
 };
 
 const findForwardDestination = (
-    { position, isLost, orientation }: Robot,
+    { position, isLost, orientation, instructions }: Robot,
     { x: xLimit, y: yLimit }: World,
 ): Robot => {
     const { x, y } = position;
+    const [forward, ...newInstructions] = instructions;
     switch (orientation) {
         case Orientation.N:
             return isLost || y + 1 > yLimit
@@ -51,6 +59,7 @@ const findForwardDestination = (
                       position,
                       orientation,
                       isLost: true,
+                      instructions: newInstructions,
                   }
                 : {
                       position: {
@@ -59,6 +68,7 @@ const findForwardDestination = (
                       },
                       orientation,
                       isLost: false,
+                      instructions: newInstructions,
                   };
         case Orientation.E:
             return isLost || x + 1 > xLimit
@@ -66,6 +76,7 @@ const findForwardDestination = (
                       position,
                       orientation,
                       isLost: true,
+                      instructions: newInstructions,
                   }
                 : {
                       position: {
@@ -74,6 +85,7 @@ const findForwardDestination = (
                       },
                       orientation,
                       isLost: false,
+                      instructions: newInstructions,
                   };
         case Orientation.S:
             return isLost || y - 1 < 0
@@ -81,6 +93,7 @@ const findForwardDestination = (
                       position,
                       orientation,
                       isLost: true,
+                      instructions: newInstructions,
                   }
                 : {
                       position: {
@@ -89,6 +102,7 @@ const findForwardDestination = (
                       },
                       orientation,
                       isLost: false,
+                      instructions: newInstructions,
                   };
         case Orientation.W:
             return isLost || x - 1 < 0
@@ -96,6 +110,7 @@ const findForwardDestination = (
                       position,
                       orientation,
                       isLost: true,
+                      instructions: newInstructions,
                   }
                 : {
                       position: {
@@ -104,6 +119,7 @@ const findForwardDestination = (
                       },
                       orientation,
                       isLost: false,
+                      instructions: newInstructions,
                   };
     }
 };

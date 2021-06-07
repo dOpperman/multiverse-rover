@@ -1,4 +1,4 @@
-import { Robot, Orientation } from './robot';
+import { Robot, Orientation, Instruction } from './robot';
 
 export type World = {
     x: number;
@@ -20,11 +20,53 @@ export const isInitialInputLine = (line: string): boolean => {
     return filteredValues.length == 2;
 };
 
+export const parseInitialInputLine = (line: string): World => {
+    const [x, y] = line.split(' ');
+
+    return {
+        x: Number(x),
+        y: Number(y),
+    };
+};
+
+export const parseRobotLine = (line: string): Robot => {
+    const [position, instructions] = line.split(')');
+    const [x, y, orientation] = position
+        .replace(/ /g, '')
+        .replace('(', '')
+        .split(',');
+
+    const processedInstructions = instructions
+        .replace(' ', '')
+        .split('')
+        .map((letter) => <Instruction>letter);
+
+    return {
+        position: {
+            x: Number(x),
+            y: Number(y),
+        },
+        orientation: <Orientation>orientation,
+        isLost: false,
+        instructions: processedInstructions,
+    };
+};
+
 export const parseLine = (line: string) => {
     return line.length;
 };
 
-export const parseInput = (input: string): State => {
+export const parseInput = (input: string): State | undefined => {
+    const [gridSize, ...robotLines] = input.split('\n');
+
+    if (!isInitialInputLine(gridSize)) {
+        throw new Error('Invalid Input!');
+    }
+
+    const world = parseInitialInputLine(gridSize);
+    const robots = robotLines.map((robot) => parseRobotLine(robot));
+
+    const initialState = { world, robots };
     return {
         world: {
             x: 0,
@@ -38,6 +80,7 @@ export const parseInput = (input: string): State => {
                 },
                 orientation: Orientation.N,
                 isLost: false,
+                instructions: [Instruction.FORWARD],
             },
         ],
     };

@@ -1,10 +1,10 @@
-import { isInitialInputLine, World } from './index';
+import { isInitialInputLine, World, parseInput, parseRobotLine } from './index';
 
 import {
     Orientation,
     Robot,
     moveForward,
-    Rotation,
+    Instruction,
     rotateRobot,
 } from './robot';
 
@@ -23,6 +23,28 @@ describe('Line Parsing', () => {
         const input = 'a l';
         expect(isInitialInputLine(input)).toEqual(false);
     });
+
+    test('Can create initial robot state from robot line input', () => {
+        const input = '(2, 3, E) LFRFF';
+
+        const expectedRobot: Robot = {
+            position: {
+                x: 2,
+                y: 3,
+            },
+            orientation: Orientation.E,
+            isLost: false,
+            instructions: [
+                Instruction.LEFT,
+                Instruction.FORWARD,
+                Instruction.RIGHT,
+                Instruction.FORWARD,
+                Instruction.FORWARD,
+            ],
+        };
+
+        expect(parseRobotLine(input)).toEqual(expectedRobot);
+    });
 });
 
 describe('Robot Moving', () => {
@@ -31,14 +53,16 @@ describe('Robot Moving', () => {
             position: { x: 1, y: 1 },
             isLost: false,
             orientation: Orientation.N,
+            instructions: [Instruction.FORWARD],
         };
         const world: World = { x: 5, y: 5 };
         const state = { world, robots: [robot] };
 
-        const expectedResult = {
+        const expectedResult: Robot = {
             position: { x: 1, y: 2 },
             isLost: false,
             orientation: Orientation.N,
+            instructions: [],
         };
 
         expect(moveForward(robot, state)).toEqual(expectedResult);
@@ -49,8 +73,9 @@ describe('Robot Moving', () => {
             position: { x: 1, y: 1 },
             isLost: false,
             orientation: Orientation.N,
+            instructions: [Instruction.RIGHT],
         };
-        const instruction = Rotation.RIGHT;
+        const instruction = Instruction.RIGHT;
 
         expect(rotateRobot(robot, instruction)).toEqual(Orientation.E);
     });
