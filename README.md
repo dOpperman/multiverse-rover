@@ -1,5 +1,10 @@
 # multiverse-rover
-The Mars Rover problem code
+The Mars Rover problem code.
+
+## Instructions
+As will be explained below I (unfortunately) left the interactivity until last, and didn't get to complete it. To "run" what I have developed so far, simply clone the repo, `npm i` and `npm run test` to execute the tests.
+
+The tests follow a very simple pattern, and could easily be extended or altered to see the desired behaviour.
 
 ## My Approach
 I decided to work on smaller sections of the problem, by breaking the task into composable, testable functions. Things like parsing the input strings could then be tested seperately to the actual operation of the robots.
