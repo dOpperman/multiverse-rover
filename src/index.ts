@@ -52,10 +52,6 @@ export const parseRobotLine = (line: string): Robot => {
     };
 };
 
-export const parseLine = (line: string) => {
-    return line.length;
-};
-
 export const parseInput = (input: string): State | undefined => {
     const [gridSize, ...robotLines] = input.split('\n');
 
